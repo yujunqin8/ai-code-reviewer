@@ -7,9 +7,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 import httpx
-from rich.console import Console
 
-console = Console()
+console = None  # placeholder
 
 
 class ReviewSeverity(Enum):
