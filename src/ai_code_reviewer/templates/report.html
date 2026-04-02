@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #24292f;
+            --border-color: #d0d7de;
+            --accent-color: #0969da;
+            --error-color: #cf222e;
+            --warning-color: #9a6700;
+            --info-color: #0969da;
+            --success-color: #1a7f37;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0d1117;
+                --text-color: #c9d1d9;
+                --border-color: #30363d;
+                --accent-color: #58a6ff;
+                --error-color: #f85149;
+                --warning-color: #d29922;
+                --info-color: #58a6ff;
+                --success-color: #3fb950;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .generated {
+            color: #6e7681;
+            font-size: 0.875rem;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 0.875rem;
+            color: #6e7681;
+            margin-bottom: 0.5rem;
+        }
+
+        .card .value {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .card.error .value { color: var(--error-color); }
+        .card.warning .value { color: var(--warning-color); }
+        .card.success .value { color: var(--success-color); }
+
+        .file-section {
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .file-header {
+            background: #f6f8fa;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .file-header {
+                background: #161b22;
+            }
+        }
+
+        .file-header h2 {
+            font-size: 1.125rem;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        }
+
+        .score {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .score.high { background: #dafbe1; color: #1a7f37; }
+        .score.medium { background: #fff8c5; color: #9a6700; }
+        .score.low { background: #ffebe9; color: #cf222e; }
+
+        @media (prefers-color-scheme: dark) {
+            .score.high { background: #238636; color: #ffffff; }
+            .score.medium { background: #9a6700; color: #ffffff; }
+            .score.low { background: #cf222e; color: #ffffff; }
+        }
+
+        .issues {
+            padding: 1rem;
+        }
+
+        .issue {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+
+        .issue.error { border-color: var(--error-color); background: rgba(207, 34, 46, 0.1); }
+        .issue.warning { border-color: var(--warning-color); background: rgba(154, 103, 0, 0.1); }
+        .issue.info { border-color: var(--info-color); background: rgba(9, 105, 218, 0.1); }
+        .issue.suggestion { border-color: var(--success-color); background: rgba(26, 127, 55, 0.1); }
+
+        .issue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-line {
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            font-size: 0.875rem;
+            color: #6e7681;
+        }
+
+        .issue-severity {
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .issue-severity.error { background: var(--error-color); color: white; }
+        .issue-severity.warning { background: var(--warning-color); color: white; }
+        .issue-severity.info { background: var(--info-color); color: white; }
+        .issue-severity.suggestion { background: var(--success-color); color: white; }
+
+        .issue-message {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .issue-rule {
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            font-size: 0.875rem;
+            color: #6e7681;
+            margin-bottom: 0.25rem;
+        }
+
+        .issue-suggestion {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(26, 127, 55, 0.1);
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .summary {
+            padding: 1rem;
+            background: #f6f8fa;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .summary {
+                background: #161b22;
+            }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: #6e7681;
+            font-size: 0.875rem;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ title }}</h1>
+        <p class="generated">Generated: {{ generated }}</p>
+    </header>
+
+    <div class="summary-cards">
+        <div class="card">
+            <h3>Files Reviewed</h3>
+            <div class="value">{{ results|length }}</div>
+        </div>
+        <div class="card">
+            <h3>Total Issues</h3>
+            <div class="value">{{ results.values()|sum(attribute='issues')|length }}</div>
+        </div>
+        <div class="card error">
+            <h3>Errors</h3>
+            <div class="value">{{ results.values()|sum(attribute='error_count') }}</div>
+        </div>
+        <div class="card warning">
+            <h3>Warnings</h3>
+            <div class="value">{{ results.values()|sum(attribute='warning_count') }}</div>
+        </div>
+        <div class="card success">
+            <h3>Avg Score</h3>
+            <div class="value">{{ (results.values()|sum(attribute='score') / results|length)|round(1) }}</div>
+        </div>
+    </div>
+
+    {% for file_path, result in results.items() %}
+    <div class="file-section">
+        <div class="file-header">
+            <h2>{{ file_path }}</h2>
+            {% set score_class = 'high' if result.score >= 80 else ('medium' if result.score >= 60 else 'low') %}
+            <span class="score {{ score_class }}">{{ result.score|round(1) }}/100</span>
+        </div>
+        
+        <div class="issues">
+            {% for issue in result.issues %}
+            <div class="issue {{ issue.severity.value }}">
+                <div class="issue-header">
+                    <span class="issue-line">Line {{ issue.line }}</span>
+                    <span class="issue-severity {{ issue.severity.value }}">{{ issue.severity.value }}</span>
+                </div>
+                <div class="issue-message">{{ issue.message }}</div>
+                <div class="issue-rule">Rule: {{ issue.rule }}</div>
+                {% if issue.suggestion %}
+                <div class="issue-suggestion">💡 {{ issue.suggestion }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if result.summary %}
+        <div class="summary">
+            <strong>Summary:</strong> {{ result.summary }}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <footer>
+        Generated by <a href="https://github.com/yujunqin8/ai-code-reviewer">AI Code Reviewer</a>
+    </footer>
+</body>
+</html>
